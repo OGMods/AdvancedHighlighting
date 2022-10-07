@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -9,18 +9,20 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AdvancedHighlighting</RootNamespace>
     <AssemblyName>AdvancedHighlighting</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\BZ\</OutputPath>
+    <DefineConstants>BZ</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +31,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'BZ|AnyCPU'">
+    <OutputPath>bin\BZ\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'SN|AnyCPU'">
+    <OutputPath>bin\SN\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony20">
@@ -46,6 +54,9 @@
     </Reference>
     <Reference Include="QModInstaller">
       <HintPath>D:\SteamLibrary\SteamApps\common\SubnauticaZero\BepInEx\plugins\QModManager\QModInstaller.dll</HintPath>
+    </Reference>
+    <Reference Include="SMLHelper">
+      <HintPath>D:\SteamLibrary\steamapps\common\SubnauticaZero\QMods\SMLHelper_BZ\SMLHelper.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -303,6 +314,11 @@
     <Compile Include="Patches\SaveLoadManager_Patch.cs" />
     <Compile Include="Patches\uGUI_OptionsPanel_Patch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="Patches\uGUI_Pings_Patch.cs" />
     <Compile Include="Utils.cs" />
@@ -310,8 +326,24 @@
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "$(TargetPath)" "D:\SteamLibrary\SteamApps\common\SubnauticaZero\QMods\AdvancedHighlighting\AdvancedHighlighting.dll"</PostBuildEvent>
+    <PostBuildEvent>if $(ConfigurationName) ==  BZ (
+mkdir "D:\SteamLibrary\steamapps\common\SubnauticaZero\QMods\$(TargetName)"
+xcopy /Y "$(TargetPath)" "D:\SteamLibrary\steamapps\common\SubnauticaZero\QMods\$(TargetName)"
+copy  /Y "$(ProjectDir)\mod_BZ.json" "D:\SteamLibrary\steamapps\common\SubnauticaZero\QMods\$(TargetName)\mod.json"
+del "D:\SteamLibrary\steamapps\common\SubnauticaZero\qmodmanager_log-SubnauticaZero.txt" )
+
+if $(ConfigurationName) ==  SN (
+mkdir "D:\SteamLibrary\steamapps\common\Subnautica\QMods\$(TargetName)"
+xcopy /Y "$(TargetPath)" "D:\SteamLibrary\steamapps\common\Subnautica\QMods\$(TargetName)"
+copy  /Y "$(ProjectDir)\mod_SN.json" "D:\SteamLibrary\steamapps\common\Subnautica\QMods\$(TargetName)\mod.json"
+del "D:\SteamLibrary\steamapps\common\Subnautica\qmodmanager_log-Subnautica.txt")</PostBuildEvent>
   </PropertyGroup>
 </Project>
