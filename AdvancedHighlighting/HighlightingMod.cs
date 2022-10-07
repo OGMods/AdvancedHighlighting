@@ -1,22 +1,23 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using QModManager.API.ModLoading;
+using SMLHelper.V2.Handlers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+#if SN
+#elif BZ
+#endif
 
 namespace AdvancedHighlighting
 {
-    [QModCore]
-    public static class HighlightingMod
+  [QModCore]
+
+  public static class HighlightingMod
+  {
+    [QModPatch]
+    public static void InitMod()
     {
-        [QModPatch]
-        public static void InitMod()
-        {
-            Console.WriteLine("[AdvancedHighlighting] Start Patching...");
-            Harmony harmony = new Harmony("net.ogmods.highlighting");
-            harmony.PatchAll();
-        }
+      Console.WriteLine("[AdvancedHighlighting] Start Patching...");
+      Harmony harmony = new Harmony("net.ogmods.highlighting");
+      harmony.PatchAll();
     }
+  }
 }
